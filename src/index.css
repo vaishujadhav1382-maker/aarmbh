@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2d1810; /* Dark brown */
+  --color-primary-light: #4a2b1c;
+  --color-secondary: #d4af37; /* Gold */
+  --color-secondary-light: #f3d56a;
+  --color-accent: #c84b31; /* Deep orange */
+  --color-accent-dark: #a13a24;
+  --color-light: #fbf8f1; /* Cream */
+  --color-dark: #1a1a1a;
+  
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Outfit", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+  }
+  body {
+    font-family: "Inter", sans-serif;
+    background-color: var(--color-light);
+    color: var(--color-primary);
+    overflow-x: hidden;
+    width: 100%;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Outfit", sans-serif;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-light);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-light);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
