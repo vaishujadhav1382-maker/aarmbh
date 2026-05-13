@@ -5,8 +5,9 @@ import { useLanguage } from '../context/LanguageContext';
 import { galleryImages } from '../data/dummyData';
 
 const Gallery = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <section id="gallery" className="py-20 bg-light">
@@ -39,7 +40,15 @@ const Gallery = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative overflow-hidden rounded-xl cursor-pointer group break-inside-avoid"
+              className={`relative overflow-hidden rounded-xl cursor-pointer group break-inside-avoid ${
+                isExpanded
+                  ? 'block' // Show everything if expanded
+                  : index >= 6 
+                    ? 'hidden' // Hide completely beyond 6 on both by default
+                    : index >= 3 
+                      ? 'hidden md:block' // Hide on mobile, show on desktop for items 3 to 5
+                      : 'block' // Items 0 to 2 always show everywhere
+              }`}
               onClick={() => setSelectedImage(src)}
             >
               <img 
@@ -48,11 +57,27 @@ const Gallery = () => {
                 className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <span className="text-white border-2 border-white px-4 py-2 rounded-full backdrop-blur-sm">View</span>
+                <span className="text-white border-2 border-white px-4 py-2 rounded-full backdrop-blur-sm">
+                  {language === 'en' ? 'View' : 'पहा'}
+                </span>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Automatic Multi-Device View More Button */}
+        {galleryImages.length > 3 && (
+          <div className={`mt-10 text-center ${galleryImages.length <= 6 ? 'md:hidden' : 'block'}`}>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="px-8 py-3.5 bg-primary hover:bg-primary-light text-white font-semibold rounded-full shadow-lg active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 mx-auto text-sm tracking-wide border-2 border-secondary/20"
+            >
+              {isExpanded 
+                ? (language === 'en' ? 'Show Less' : 'कमी पहा')
+                : (language === 'en' ? 'View More' : 'अधिक पहा')}
+            </button>
+          </div>
+        )}
 
         {/* Lightbox */}
         <AnimatePresence>

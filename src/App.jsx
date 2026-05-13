@@ -20,7 +20,7 @@ import Contact from './sections/Contact';
 // A minimalist luxury loader component
 const PreLoader = () => {
   const letters = Array.from("Hotel Aarmbh");
-  
+
   const containerVariants = {
     initial: {},
     animate: {
@@ -30,11 +30,11 @@ const PreLoader = () => {
       }
     }
   };
-  
+
   const letterVariants = {
     initial: { opacity: 0, y: 20, rotateX: 90 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       y: 0,
       rotateX: 0,
       transition: {
@@ -46,17 +46,17 @@ const PreLoader = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="fixed inset-0 z-[9999] bg-[#1a0e09] flex flex-col items-center justify-center text-white overflow-hidden"
-      exit={{ 
-        opacity: 0, 
+      exit={{
+        opacity: 0,
         scale: 1.05,
         filter: "blur(10px)",
-        transition: { duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] } 
+        transition: { duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }
       }}
     >
       {/* Ambient Background Glows */}
-      <motion.div 
+      <motion.div
         className="absolute w-[600px] h-[600px] rounded-full bg-secondary/5 blur-[100px]"
         animate={{
           scale: [1, 1.2, 1],
@@ -70,7 +70,7 @@ const PreLoader = () => {
           ease: "easeInOut"
         }}
       />
-      <motion.div 
+      <motion.div
         className="absolute w-[400px] h-[400px] rounded-full bg-accent/5 blur-[80px]"
         animate={{
           scale: [1.2, 1, 1.2],
@@ -111,9 +111,9 @@ const PreLoader = () => {
                 strokeDasharray="339.29"
                 initial={{ strokeDashoffset: 339.29 }}
                 animate={{ strokeDashoffset: 0 }}
-                transition={{ 
-                  duration: 1.2, 
-                  ease: [0.22, 1, 0.36, 1] 
+                transition={{
+                  duration: 1.2,
+                  ease: [0.22, 1, 0.36, 1]
                 }}
                 strokeLinecap="round"
               />
@@ -121,7 +121,7 @@ const PreLoader = () => {
           </div>
 
           {/* Subtle rotating border for extra flair */}
-          <motion.div 
+          <motion.div
             className="absolute w-[110%] h-[110%] rounded-full border border-dashed border-secondary/20"
             animate={{ rotate: 360 }}
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
@@ -151,16 +151,16 @@ const PreLoader = () => {
               ease: [0.34, 1.56, 0.64, 1]
             }}
           >
-            <img 
-              src="/aarmbh-logo.png" 
-              alt="Hotel Aarmbh Logo" 
+            <img
+              src="/aarmbh-logo.png"
+              alt="Hotel Aarmbh Logo"
               className="w-full h-full object-cover select-none scale-[1.04]"
             />
           </motion.div>
         </div>
 
         {/* Text Animation */}
-        <motion.div 
+        <motion.div
           className="flex flex-col items-center text-center"
           style={{ perspective: 1000 }}
           variants={containerVariants}
@@ -172,16 +172,15 @@ const PreLoader = () => {
               <motion.span
                 key={index}
                 variants={letterVariants}
-                className={`text-4xl md:text-5xl font-heading font-bold text-secondary tracking-wide ${
-                  char === ' ' ? 'w-3 md:w-4' : ''
-                }`}
+                className={`text-4xl md:text-5xl font-heading font-bold text-secondary tracking-wide ${char === ' ' ? 'w-3 md:w-4' : ''
+                  }`}
                 style={{ display: 'inline-block', transformOrigin: "50% 50% -20px" }}
               >
                 {char === ' ' ? '\u00A0' : char}
               </motion.span>
             ))}
           </div>
-          
+
           {/* Glowing horizontal separator */}
           <div className="relative w-48 h-[1px] mb-3 overflow-hidden">
             <motion.div
@@ -197,7 +196,7 @@ const PreLoader = () => {
               className="absolute inset-0 bg-secondary/30"
             />
           </div>
-          
+
           {/* Subtle Subtitle */}
           <motion.p
             initial={{ opacity: 0, letterSpacing: "0.1em" }}
@@ -249,7 +248,7 @@ function App() {
               <Contact />
             </main>
             <Footer />
-            
+
             {/* Global floating utility buttons */}
 
             <ScrollToTop />
