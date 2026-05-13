@@ -9,8 +9,9 @@ const Reviews = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
   
-  // Click-to-drag and autoscroll interactive states
+  // Precise scroll synchronization states to prevent mobile browser rounding lock-ups
   const sliderRef = useRef(null);
+  const scrollPosRef = useRef(0); // High-precision float accumulator
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -20,17 +21,24 @@ const Reviews = () => {
   // Duplicate the array once to create an endless loop track for the infinity scroll engine
   const doubleReviews = [...reviews, ...reviews];
 
-  // 1. Flawless 60fps Auto-Scrolling Loop with smart pause conditions
+  // 1. Bulletproof Auto-Scrolling Loop with Float Accumulation (avoids 0px mobile clamp trap)
   useEffect(() => {
     const slider = sliderRef.current;
     if (!slider || isMobileExpanded || selectedVideo) return;
+
+    // Sync accumulator ref to initial scroll left
+    scrollPosRef.current = slider.scrollLeft;
 
     let animationFrameId;
     
     const scrollLoop = () => {
       // Resume auto scroll only when not actively grabbing, hovering, or reading video modal
       if (!isDragging && !isHovered && !selectedVideo && !isMobileExpanded) {
-        slider.scrollLeft += 0.7; // Silky smooth, constant linear increment
+        // Store the EXACT float. Prevents browsers from rounding 0.7 down to 0 permanently.
+        scrollPosRef.current += 0.8; 
+        
+        // Push the precise float value to the DOM (browser handles sub-pixel rendering)
+        slider.scrollLeft = scrollPosRef.current;
       }
       animationFrameId = requestAnimationFrame(scrollLoop);
     };
@@ -45,15 +53,20 @@ const Reviews = () => {
     const slider = sliderRef.current;
     if (!slider) return;
 
+    // Sync our float ref with manual swiping/scrolling
+    scrollPosRef.current = slider.scrollLeft;
+
     const halfWidth = slider.scrollWidth / 2;
     
     // Snap back to start if user manually swipes past half way
     if (slider.scrollLeft >= halfWidth) {
       slider.scrollLeft -= halfWidth;
+      scrollPosRef.current = slider.scrollLeft; // Resync float accumulator
     } 
     // Snap forward to half way if user manually swipes left off the edge
     else if (slider.scrollLeft <= 0) {
       slider.scrollLeft += halfWidth;
+      scrollPosRef.current = slider.scrollLeft; // Resync float accumulator
     }
   };
 
@@ -80,6 +93,8 @@ const Reviews = () => {
     const walk = (x - startX) * 1.5; 
     setDraggedDistance(Math.abs(walk));
     sliderRef.current.scrollLeft = scrollLeft - walk;
+    // Keep high precision accumulator in sync with active drag
+    scrollPosRef.current = sliderRef.current.scrollLeft;
   };
 
   const handleItemClick = (item) => {
@@ -123,7 +138,13 @@ const Reviews = () => {
         onMouseLeave={handleMouseLeave}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={() => {
+          // CRITICAL: Prevent tap events on mobile/touch screens from locking the hover state to true permanently
+          const supportsHover = window.matchMedia('(hover: hover)').matches;
+          if (supportsHover) {
+            setIsHovered(true);
+          }
+        }}
         onScroll={handleScroll}
         className={`${isMobileExpanded ? 'hidden md:flex' : 'flex'} overflow-x-auto reviews-carousel select-none gap-6 px-6 md:px-12 pb-8 relative cursor-grab active:cursor-grabbing`}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
